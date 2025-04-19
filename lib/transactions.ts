@@ -79,6 +79,7 @@ export function generateMonthlyData(transactions: Transaction[]): MonthlyData[] 
       month: monthLabel,
       expenses: 0,
       income: 0,
+      budgets: [], // Initialize empty budgets array
     };
   }
 
