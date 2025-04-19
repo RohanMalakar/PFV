@@ -13,6 +13,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { SummaryCard } from "@/components/dashboard/summary-card"
 import { ExpensesChart } from "@/components/dashboard/expenses-chart"
+import { BudgetSettings } from "@/components/dashboard/budget-settings"
+import { BudgetChart } from "@/components/dashboard/budget-chart"
+import { SpendingInsights } from "@/components/dashboard/spending-insights"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { 
@@ -23,16 +26,19 @@ import {
   generateMonthlyData,
 } from "@/lib/transactions"
 import { formatCurrency } from "@/lib/data"
-import { Transaction } from "@/types"
+import { Transaction, Budget } from "@/types"
 
 export default function Home() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
+  const [budgets, setBudgets] = useState<Budget[]>([])
   const [isLoading, setIsLoading] = useState(true)
   
   useEffect(() => {
-    // Load transactions from local storage
+    // Load transactions and budgets from local storage
     const loadedTransactions = loadTransactions()
+    const loadedBudgets = JSON.parse(localStorage.getItem('budgets') || '[]')
     setTransactions(loadedTransactions)
+    setBudgets(loadedBudgets)
     setIsLoading(false)
   }, [])
   
@@ -50,6 +56,11 @@ export default function Home() {
   const recentTransactions = [...transactions]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 3)
+
+  const handleSaveBudgets = (newBudgets: Budget[]) => {
+    setBudgets(newBudgets)
+    localStorage.setItem('budgets', JSON.stringify(newBudgets))
+  }
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -172,14 +183,17 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            
-            <div className="text-center">
-              <Link href="/transactions/new">
-                <Button className="mx-auto gap-1" size="lg">
-                  <Plus className="h-4 w-4" /> Add New Transaction
-                </Button>
-              </Link>
+
+            <div className="grid gap-6 md:grid-cols-2 mb-8">
+              <BudgetSettings budgets={budgets} onSave={handleSaveBudgets} />
+              <SpendingInsights budgets={budgets} transactions={transactions} />
             </div>
+
+            {budgets.length > 0 && (
+              <div className="mb-8">
+                <BudgetChart budgets={budgets} transactions={transactions} />
+              </div>
+            )}
           </>
         )}
       </main>

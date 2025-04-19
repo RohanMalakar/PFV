@@ -30,7 +30,7 @@ export function ExpensesChart({ data }: ExpensesChartProps) {
   
   // Custom tooltip formatter
   const formatTooltip = (value: number) => {
-    return `$${value.toFixed(2)}`
+    return `₹${value.toFixed(2)}`
   }
 
   return (

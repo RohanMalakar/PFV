@@ -39,11 +39,11 @@ export default function TransactionsPage() {
               Manage and view all your financial transactions
             </p>
           </div>
-          <Link href="/transactions/new">
+          {/* <Link href="/transactions/new">
             <Button className="gap-1">
               <PlusCircle className="h-4 w-4" /> Add Transaction
             </Button>
-          </Link>
+          </Link> */}
         </div>
         
         {isLoading ? (
@@ -55,6 +55,8 @@ export default function TransactionsPage() {
           />
         )}
       </main>
+
+      
       
       <Footer />
     </div>
